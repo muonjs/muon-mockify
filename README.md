@@ -97,9 +97,9 @@ var mymodule_orig = mockify.original("mymodule");
 var mymodule_mock = mockify.original("./mock_modules/lib/mymodule");
 console.log(mymodule_orig === mymodule); // FALSE
 console.log(mymodule_mock === mymodule); // TRUE
-console.log(mymodule_temp === mymodule); // TRUE
+console.log(mymodule_alt === mymodule); // TRUE
 
-var foo = require("foo/");
+var foo = require("foo");
 var foo_orig = mockify.original("foo");
 console.log(foo_orig === foo); // FALSE
 

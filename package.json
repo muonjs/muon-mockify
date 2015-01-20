@@ -4,11 +4,13 @@
   "description": "The easiest way to mockify your project",
   "main": "main.js",
   "scripts": {
-    "test": "mocha -C --reporter xunit > reports/xunit.xml || true"
+    "pretest": "rm -rf reports || true && mkdir reports",
+    "test": "./node_modules/.bin/mocha -C --reporter xunit > reports/xunit.xml",
+    "posttest": "chmod 777 reports/xunit.xml"
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.muonapps.com/muon-group/muon-mock.git"
+    "url": "https://gitlab.muonapps.com/muon-group/muon-mockify.git"
   },
   "keywords": [
     "mock",

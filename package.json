@@ -1,0 +1,24 @@
+{
+  "name": "muon-mockify",
+  "version": "0.0.1",
+  "description": "The easiest way to mockify your project",
+  "main": "main.js",
+  "scripts": {
+    "test": "mocha -C --reporter xunit > reports/xunit.xml || true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.muonapps.com/muon-group/muon-mock.git"
+  },
+  "keywords": [
+    "mock",
+    "test",
+    "mockify",
+    "debug"
+  ],
+  "author": "Sukharev Kirill <SukharevKirill@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^2.1.0"
+  }
+}

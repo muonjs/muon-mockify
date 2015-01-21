@@ -7,7 +7,7 @@ ___
 ### Описание
 
 Данный модуль призван упростить процесс интеграционного и юнит-тестирования Вашего проекта.
-Модуль исходно разработан как часть среды интеграционного и юнит-тестирования веб-фреймворка [Muon.js](https://gitlab.muonapps.com/muonjs/muon), однако не зависит от него, поэтому Вы можете использовать muon-mockify для тестирования Ваших персональных проектов.
+Модуль исходно разработан как часть среды интеграционного и юнит-тестирования веб-фреймворка [Muon.js](https://gitlab.muonapps.com/muonjs/muon), однако не зависет от него, поэтому Вы можете использовать muon-mockify для тестирования Ваших персональных проектов.
 
 Модуль является надстройкой над методом `require` модуля `Module`, входящего в состав [Node.js](http://nodejs.org/api/modules.html#modules_module_require_id), и позволяет замещать экспортируемые модули на их mock-аналоги.
 
@@ -71,7 +71,7 @@ $ tree .
 
 Ниже представлена таблица сооветствия аргументов переданных в `require` и результирующих путей, по которым будет производиться поиск mock-объекта:
 
-| имя файла, из которого выполняется `requrie` | аргумент `require` | результирующий путь |
+| имя файла, из которого выполняется `require` | аргумент `require` | результирующий путь |
 | -------------------------------------------- | ------------------ | ------------------- |
 | ./main.js | ./lib/mymodule | ./mock_modules/lib/mymodule |
 | ./test/test.js | ../lib/mymodule | ./mock_modules/lib/mymodule |
@@ -212,57 +212,37 @@ console.log(mockify.getMockifyDirs());
 
 Устанавливает в качестве единственного текущего пути **MOCKIFY_DIR** значение по умолчанию: `./mock_modules` в корне проекта.
 
-### Примеры тестов на Mocha
+### Примеры тестов
 
-Ниже приведена пара абстрактных примеров тестов на Mochа и Chai с использованием muon-mockify:
+Ниже приведен небольшой туториал - пример тестирования примитивного HTTP клиента, работающего поверх нативного Node.js модуля `http`.
 
 ```js
-require("chai").should();
-var expect = require("chai").expect;
+# ./lib/myhttpclient.js
 
-describe("test case #1",function(){
-    var mockify = require("muon-mockify"),
-        testModule = require("../lib/mymodule"),
-        retData, retError, initialData;
-    
-    before(mockify.enable);
-    before(function(){
-        // some set up here
-    });
-    
-    before(function(done){
-        testModule.run(function(err,data){
-            retData = data;
-            retError = err;
-            done();
+var http = require("http");
+
+exports.get = function(url,callback){
+    http.get(url,function(resp){
+        var chunks = [];
+        resp.on("data",function(chunk) {
+            chunks.push(chunk)
+        }).on("end",function(){
+            callback(null,resp.status,Buffer.concat(chunks).toString("utf-8"));
         });
-    });
-  
-    it("err should be null",function(){
-        expect(retError).to.be.a("null");
-    });
-    
-    it("test data be ok",function(){
-        testModule.shoud.be.equal(initialData);
-    });
-    
-    after(function(){
-        // tear down here
-    });
-    
-    after(mockify.disable);
-});
+    }).on("error",callback);
+}
 ```
 
-Более сложный пример:
+Очевидно, для тестирования подобного модуля требуется сетевая часть, которая выполнит HTTP-запрос. Чтобы не тратить время на организацию тестового веб-сервера, и также не зависить от внешних факторов, способных повлиять на успешность выполнения тестов (например, доступность сети, доступность запрашиваемого сервера с тестовыми данными, валидность получаемых данных и т.д.) нам потребуется создать mock-объект для модуля `http`.
 
 ```js
-require("chai").should();
-var expect = require("chai").expect,
-    var util = require("util"),
-    mockify = require("muon-mockify"),
-    Readable = require("stream").Readable;
+# ./test/http-mock.js
 
+var Readable = require("stream").Readable,
+    _ = require("underscore"),
+    util = require("util");
+
+/// Реализация поведения IncommingMessage модуля 'http'
 function IncomingMessageMock(status,data){
     Readable.apply(this,arguments);
     this.__offset = 0;
@@ -270,9 +250,7 @@ function IncomingMessageMock(status,data){
     this.headers = {};
     this.__data = data;
 }
-
 util.inherits(IncomingMessageMock,Readable);
-
 _.extend(IncomingMessageMock.prototype,{
     _read: function(size){
         var ret = Buffer([].slice.apply(Buffer(this.__data),[this.__offset,this.__offset+size]));
@@ -282,28 +260,54 @@ _.extend(IncomingMessageMock.prototype,{
     }
 });
 
-describe("test case #2 for HTTP Mock",function(){
-    
+/// Настраиваемый mock-класс имитирующий поведение модуля 'http'.
+/// httpMockStatus и httpMockRet - то что безусловно должен вернуть HTTP клиент
+module.exports = function HttpMock(httpMockStatus,httpMockRet){
+    _.extend(this,{
+        get: function(url,callback){
+            callback(new IncomingMessageMock(httpMockStatus,httpMockRet))
+        }
+    }
+}
+```
+
+Теперь мы готовы написать сам тест совместно с `muon-mockify`:
+
+```js
+# ./test/test.js
+
+require("chai").should();
+var expect = require("chai").expect,
+    mockify = require("muon-mockify");
+
+describe("test case for HTTP Mock",function(){
+
+    // Исходные данные
     var httpMockRet = "<strong>Success</strong>",
         httpMockStatus = 200,
-        httpMock = {
-            get: function(url,callback){
-                callback(new IncomingMessageMock(httpMockStatus,httpMockRet))
-            }
-        },
-        retData, retStatus;
+        HttpMock = require("./http-mock");
+        
+    var retData, retStatus, retErr;
     
     before(function() {
-        mockify.mock("http",httpMock);
+        /// Активируем враппер require и замещаем модуль 'http' mock-объектом
+        mockify.mock("http",new HttpMock(httpMockStatus,httpMockRet));
     }
     
-    before(function(){
-        mockify.original("./lib/myajaxclient").get("http://foo.bar",function(status,data){
+    // Выполняем метод
+    before(function(done){
+        mockify.original("./lib/myajaxclient").get("http://foo.bar",function(err,status,data){
+            retErr = err;
             retData = data;
             retStatus = status;
+            done();
         });
     });
     
+    // Выполняем серию проверок
+    it("err should be null",function(){
+        expect(retErr).to.be.a("null");
+    });  
   
     it("data should exist",function(){
         expect(retData).to.be.a("string");
@@ -321,10 +325,137 @@ describe("test case #2 for HTTP Mock",function(){
         retStatus.shoud.be.equal(httpMockStatus);
     });
     
+    // Отключаем враппер, чтобы не влиять на другие тесты
+    after(mockify.disable);
+});
+```
+В определенный момент Вам станет ясно, что реализация mock-модуля HttpMock (и любых других подобных модулей) стала достаточно универсальной, и Вы можете использовать ее также в остальных сетевых тестах. Тогда соответствующий модуль будет целесообразно поместить в **MOCKIFY_DIR**.
+
+Теперь предположим, что у нас есть еще один модуль, который выполняет обработку данных, полученных с помощью нашего же HttpClient.
+```js
+# ./lib/dataproc.js
+
+var httpClient = require("./myhttpclient");
+
+export.jsonify = function(source,callback) {
+    httpClient.get(source,function(err,status,data) {
+        if (!!err) return callback(err);
+        if (status != 200) return callback({ status: status, message: "data source is not available"});
+        try {
+            callback(null,JSON.parse(data));
+        }
+        catch(e){
+            callback(e);
+        }
+    });
+}
+    
+export.xmlify = function(source,callback) {
+    ...
+}
+
+```
+
+Для тестирования данного модуля нам потребуется mock-реализация локального модуля HttpClient:
+```js
+# ./mock_modules/lib/myhttpclient.js
+
+var mockErr,mockStatus,mockData; 
+exports.setup = function(err,status,data){
+    mockStatus = status;
+    mockData = data;
+}
+
+exports.get = function(source,callback) {
+    callback(mockErr,mockStatus,mockData);
+}
+```
+
+В отличии от HttpMock модуля, мы создали настраиваемый вариант mock-объекта и разместили в директории **MOCKIFY_DIR**. По этому сам тест может быть немного упрощен:
+```js
+# ./test/test_dataproc.js
+
+
+require("chai").should();
+var expect = require("chai").expect,
+    mockify = require("muon-mockify");
+
+describe("test case for data processor",function(){
+    var dummySource = "http://foo.bar",
+        initialStatus = 200,
+        initialData = "{ \"status\": \"Success\" }",
+        initialObject = JSON.parse(initialData);
+        testError,testObject;
+        
+    // Подключаем MOCKIFY_DIR
+    before(mockify.enable);
+    
+    // Настраиваем mock-объект
+    before(function(){
+        
+        require("../lib/myhttpclient.js").setup(null,initialStatus,initialData);
+    });
+    
+    // Запускаем сценарий
+    before(function(done) {
+        mockify.original("../lib/dataproc.js").jsonify(dummySource,function(err,data){
+            testError = err;
+            testData = data;
+            done();
+        });
+    });
+    
+    // Проверяем результат
+    it("err should be a null",function(){
+        expect(testError).to.be.a("null");
+    });
+    
+    it("ret data should match to initial object",function(){
+        testObject.should.be.equal(initialObject);
+    });
+    
+    // Отключаем враппер
     after(mockify.disable);
 });
 ```
 
+и так далее..
+
+#### Что дальше...
+
+В последствии при создании сьюит юнит-тестов Вы сможете определить глобальный `setup` и `teardown` методы, которые будут активировать враппер `require`.
+Доступ к тестрируемому модулю следует выполнять с помощью метода `mockify.original`. Для `mocha` тестов это будет выглядеть примерно следующим образом:
+
+```js
+describe("unit test suite",function(){
+    before(mockify.enable);
+    
+    describe("test case for ./mymodule1",function(){
+        before(function() {
+            mockify.original("../lib/mymodule1").run( ... );
+        });
+        
+        it ("check it" ,function() { ... });
+    });
+    
+    describe("test case for ./mymodule2",function(){
+        before(function() {
+            mockify.original("../lib/mymodule2").run( ... );
+        });
+        
+        it ("check it" ,function() { ... });
+    });
+    
+    ...
+    
+    after(mockify.disable);
+});
+```
+
+Помимо этого вы также можете создавать отдельные сьюиты с независимыми тестовыми сценариями.
+В сложном проекте это может быть удобно для тестирования отдельных значимых аспектов поведения программного продукта.
+Добиться этого можно, используя наборы mock-модулей с согласованным поведением и (или) набором тестовых данных, 
+помещенных в отдельные переключаемые директории **MOCKIFY_DIR**.
 ____
 
 #### Лицензия

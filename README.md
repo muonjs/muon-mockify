@@ -387,12 +387,9 @@ describe("test case for data processor",function(){
         initialObject = JSON.parse(initialData),
         testError,testObject;
         
-    // Подключаем MOCKIFY_DIR
-    before(mockify.enable);
-    
-    // Настраиваем mock-объект
+    // Подключаем MOCKIFY_DIR и настраиваем mock-объект
     before(function(){
-        
+        mockify.enable();
         require("../lib/myhttpclient.js").setup(null,initialStatus,initialData);
     });
     
@@ -428,7 +425,9 @@ describe("test case for data processor",function(){
 
 ```js
 describe("unit test suite",function(){
-    before(mockify.enable);
+    before(function(){
+        mockify.enable();
+    });
     
     describe("test case for ./mymodule1",function(){
         before(function() {

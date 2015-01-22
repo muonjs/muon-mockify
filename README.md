@@ -337,7 +337,7 @@ describe("test case for HTTP Mock",function(){
 
 var httpClient = require("./myhttpclient");
 
-export.jsonify = function(source,callback) {
+exports.jsonify = function(source,callback) {
     httpClient.get(source,function(err,status,data) {
         if (!!err) return callback(err);
         if (status != 200) return callback({ status: status, message: "data source is not available"});
@@ -350,7 +350,7 @@ export.jsonify = function(source,callback) {
     });
 }
     
-export.xmlify = function(source,callback) {
+exports.xmlify = function(source,callback) {
     ...
 }
 

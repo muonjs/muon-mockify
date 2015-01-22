@@ -267,14 +267,14 @@ module.exports = function HttpMock(httpMockStatus,httpMockRet){
         get: function(url,callback){
             callback(new IncomingMessageMock(httpMockStatus,httpMockRet))
         }
-    }
+    });
 }
 ```
 
 Теперь мы готовы написать сам тест совместно с `muon-mockify`:
 
 ```js
-# ./test/test.js
+# ./test/httpclientTest.js
 
 require("chai").should();
 var expect = require("chai").expect,
@@ -373,7 +373,7 @@ exports.get = function(source,callback) {
 
 В отличии от HttpMock модуля, мы создали настраиваемый вариант mock-объекта и разместили в директории **MOCKIFY_DIR**. По этому сам тест может быть немного упрощен:
 ```js
-# ./test/test_dataproc.js
+# ./test/dataprocTest.js
 
 
 require("chai").should();

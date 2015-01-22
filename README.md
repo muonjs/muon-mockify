@@ -296,7 +296,7 @@ describe("test case for HTTP Mock",function(){
     
     // Выполняем метод
     before(function(done){
-        mockify.original("./lib/myajaxclient").get("http://foo.bar",function(err,status,data){
+        mockify.original("./lib/myhttpclient").get("http://foo.bar",function(err,status,data){
             retErr = err;
             retData = data;
             retStatus = status;

@@ -126,9 +126,9 @@ mockify.disable();
 Повторное выполнение `mockify.enable` с аргументом добавит в список имен для поиска mock-объектов новые значения. При этом, если первый вызов был выполнен без аргумента, повторный вызов не будет иметь смысла и не приведет ни к каким изменениям.
 
 &nbsp;
-- **mockfiy.mock( path, mock )**
+- **mockfiy.enableMock( path, mock )**
 
-Также как и метод `enable` активирует враппер метода `require`, однако, вместо поиска модуля в файловой системе в директориях **MOCKIFY_DIR**, метод `require` вернет значение `mock`, переданное в качестве аргумента. Данный метод может быть вызван вместе с методом `mockify.enable`, при этом в процессе поиска mock-объекта приоритет будет за значением, переданным через `mockify.mock`.
+Также как и метод `enable` активирует враппер метода `require`, однако, вместо поиска модуля в файловой системе в директориях **MOCKIFY_DIR**, метод `require` вернет значение `mock`, переданное в качестве аргумента. Данный метод может быть вызван вместе с методом `mockify.enable`, при этом в процессе поиска mock-объекта приоритет будет за значением, переданным через `mockify.enableMock`.
 
 **Пример:**<br>
 ```js
@@ -139,22 +139,22 @@ var httpMock = {
     createServer: function(){}
 }
 
-mockify.mock("http",httpMock);
+mockify.enableMock("http",httpMock);
 var http = require("http");
 console.log(http === httpMock); // TRUE
 ```
 
 &nbsp;
-- **mockfiy.unmock( [ id ] )**
+- **mockfiy.removeMock( [ id ] )**
 
-Вызов данного метода отменяет действие вызова `mockify.mock` для имен и/или путей переданных в качестве аргумента, а также добавляет соответствующие имена в игнорируемый список в процессе поиска mock-модулей в файловой системе в директориях
+Вызов данного метода отменяет действие вызова `mockify.enableMock` для имен и/или путей переданных в качестве аргумента, а также добавляет соответствующие имена в игнорируемый список в процессе поиска mock-модулей в файловой системе в директориях
 **MOCKIFY_DIR**. Также метод очищает require кэш для указанных модулей, таким образом повторный экспорт указанных модулей приведет к их повторной загрузке и исполнению. Данный метод может быть полезен, когда требуется исключить из полного списка существующих mock-объектов, подключаемых через `mockify.enable`,  один или несколько модулей. 
 
 **Пример:**<br>
 ```js
 var mockify = require("muon-mockify");
 mockify.enable();
-mockify.unmock("./lib/mymodule");
+mockify.removeMock("./lib/mymodule");
 var mymodule = require("./lib/mymodule");
 var mymodule_orig = mockify.original("./lib/mymodule");
 console.log(mymodule_orig === mymodule); // TRUE
@@ -163,12 +163,12 @@ console.log(mymodule_orig === mymodule); // TRUE
 &nbsp;
 - **mockfiy.disable()**
 
-Отключает враппер `require`, а также очищает кэш загруженных модулей. Также отменяет все действия и фильтры, установленные методами `mockify.enable`, `mockify.mock` и `mockify.unmock`.
+Отключает враппер `require`, а также очищает кэш загруженных модулей. Также отменяет все действия и фильтры, установленные методами `mockify.enable`, `mockify.enableMock` и `mockify.removeMock`.
 
 &nbsp;
 - **mockfiy.original( id )**
 
-Выполняет вызов оригинального метода `require`, игнорируя все текущие параметры mockify. В случае, если враппер метод неактивен (методы `mockify.enable` или `mockify.mock` ниразу не использовались, либо был вызван `mockify.disable`), то вызов `mockify.original` выведет сооветствующее сообщение в `stderr`.
+Выполняет вызов оригинального метода `require`, игнорируя все текущие параметры mockify. В случае, если враппер метод неактивен (методы `mockify.enable` или `mockify.enableMock` ниразу не использовались, либо был вызван `mockify.disable`), то вызов `mockify.original` выведет сооветствующее сообщение в `stderr`.
 
 &nbsp;
 - **mockfiy.getMockifyDirs() : [ path ]**
@@ -291,7 +291,7 @@ describe("test case for HTTP Mock",function(){
     
     before(function() {
         /// Активируем враппер require и замещаем модуль 'http' mock-объектом
-        mockify.mock("http",new HttpMock(httpMockStatus,httpMockRet));
+        mockify.enableMock("http",new HttpMock(httpMockStatus,httpMockRet));
     }
     
     // Выполняем метод

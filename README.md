@@ -292,7 +292,7 @@ describe("test case for HTTP Mock",function(){
     before(function() {
         /// Активируем враппер require и замещаем модуль 'http' mock-объектом
         mockify.enableMock("http",new HttpMock(httpMockStatus,httpMockRet));
-    }
+    });
     
     // Выполняем метод
     before(function(done){

@@ -384,7 +384,7 @@ describe("test case for data processor",function(){
     var dummySource = "http://foo.bar",
         initialStatus = 200,
         initialData = "{ \"status\": \"Success\" }",
-        initialObject = JSON.parse(initialData);
+        initialObject = JSON.parse(initialData),
         testError,testObject;
         
     // Подключаем MOCKIFY_DIR

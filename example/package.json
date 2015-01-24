@@ -1,7 +1,7 @@
 {
   "name": "muon-mockify-example",
   "version": "0.0.1",
-  "description": "The example for muon-mockify project",
+  "description": "Example for muon-mockify project",
   "main": "main.js",
   "author": "Sukharev Kirill <SukharevKirill@gmail.com>",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "muon-mockify": "*"
   },
   "dependencies": {
-    "underscore": "^1.7.0"
-
+    "underscore": "^1.7.0",
+    "foo":"*"
   }
 }

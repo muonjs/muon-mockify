@@ -1,0 +1,13 @@
+{
+  "name": "muon-mockify-test",
+  "version": "0.0.1",
+  "description": "Test project for muon-mockify project",
+  "main": "main.js",
+  "author": "Sukharev Kirill <SukharevKirill@gmail.com>",
+  "devDependencies": {
+    "foo": "*"
+  },
+  "dependencies": {
+    "walk": "^2.3.9"
+  }
+}

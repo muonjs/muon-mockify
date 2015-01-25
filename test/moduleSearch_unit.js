@@ -74,8 +74,6 @@ describe("module search mock unit test",function(){
 });
 
 describe("module search check local unit",function(){
-    var lib = require("../lib/moduleSearch");
-
     [
         "./lib/mymodule.js",
         "./main.js",
@@ -95,8 +93,6 @@ describe("module search check local unit",function(){
 });
 
 describe("module search isAbsolute unit test",function(){
-    var lib = require("../lib/moduleSearch");
-
     [
         "./lib/mymodule.js",
         "./main.js",
@@ -116,8 +112,6 @@ describe("module search isAbsolute unit test",function(){
 });
 
 describe("module search isPackage unit test",function(){
-    var lib = require("../lib/moduleSearch");
-
     [
         "some",
         "some/foo"

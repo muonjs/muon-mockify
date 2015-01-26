@@ -12,11 +12,11 @@
     "systemtest": "cd systemtest && npm install &&  (../node_modules/.bin/mocha -C --reporter xunit > ../reports/xunit-system.xml || true) && cd ..",
     "postsystemtest": "chmod 777 reports/*.xml || true",
     "presystemsimple": "(mkdir reports || true) && (rm -rf systemtest/node_modules/* || true)",
-    "systemsimple": "cd systemtest && npm install &&  (../node_modules/.bin/mocha --reporter min || true)  && cd ..",
+    "systemsimple": "cd systemtest && npm install &&  (./node_modules/.bin/mocha --reporter min || true)  && cd ..",
     "postsystemsimple": "chmod 777 reports/*.xml || true",
     "preexampletest": "(mkdir reports || true) && (rm -rf example/node_modules/* || true)",
     "exampletest": "cd example && npm install && (../node_modules/.bin/mocha -C --reporter xunit > ../reports/xunit-example.xml || true) && cd ..",
-    "examplesimple": "cd example && npm install && (../node_modules/.bin/mocha --reporter min || true) && cd ..",
+    "examplesimple": "cd example && npm install && (./node_modules/.bin/mocha --reporter min || true) && cd ..",
     "postexampletest": "chmod 777 reports/*.xml || true"
   },
   "repository": {

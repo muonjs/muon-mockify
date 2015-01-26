@@ -1,13 +1,16 @@
 {
-  "name": "muon-mockify-test",
+  "name": "muon-mockify-example",
   "version": "0.0.1",
-  "description": "Test project for muon-mockify project",
+  "description": "The example for muon-mockify project",
   "main": "main.js",
   "author": "Sukharev Kirill <SukharevKirill@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
-    "foo": "*"
+    "chai": "file:../node_modules/chai",
+    "mocha": "file:../node_modules/mocha",
+    "muon-mockify": "file:../"
   },
   "dependencies": {
-    "walk": "^2.3.9"
+    "underscore": "file:../node_modules/underscore"
   }
 }

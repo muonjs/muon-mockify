@@ -1,5 +1,4 @@
 node_modules/
-!example/node_modulesgit
 npm-debug.log
 *.db
 .idea

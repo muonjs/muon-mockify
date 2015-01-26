@@ -4,12 +4,15 @@
   "description": "The easiest way to mockify your project",
   "main": "main.js",
   "scripts": {
-    "pretest": "rm -rf reports || true && mkdir reports",
+    "pretest": "rm -rf reports || true && mkdir reports || true",
     "test": "./node_modules/.bin/mocha -C --reporter xunit > reports/xunit.xml || true",
-    "posttest": "chmod 777 reports/xunit.xml",
-    "presystemtest": "npm test",
-    "systemtest": "cd systemtest && ../node_modules/.bin/mocha -C --reporter xunit > ../reports/xunit-system.xml || true && cd ..",
-    "postsystemtest": "chmod 777 reports/xunit.xml"
+    "posttest": "chmod 777 reports/*.xml || true",
+    "presystemtest": "mkdir reports || true",
+    "systemtest": "cd systemtest && ./node_modules/.bin/mocha -C --reporter xunit > ../reports/xunit-system.xml || true && cd ..",
+    "postsystemtest": "chmod 777 reports/*.xml || true",
+    "preexampletest": "mkdir reports || true",
+    "exampletest": "cd example && ./node_modules/.bin/mocha -C --reporter xunit > ../reports/xunit-example.xml || true && cd ..",
+    "postexampletest": "chmod 777 reports/*.xml || true"
   },
   "repository": {
     "type": "git",

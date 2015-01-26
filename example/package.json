@@ -6,12 +6,12 @@
   "author": "Sukharev Kirill <SukharevKirill@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^1.10.0",
-    "mocha": "^2.1.0",
-    "muon-mockify": "*"
+    "chai": "file:../node_modules/chai",
+    "mocha": "file:../node_modules/mocha/",
+    "muon-mockify": "file:../"
   },
   "dependencies": {
-    "underscore": "^1.7.0",
-    "foo":"*"
+    "underscore": "file:../node_modules/underscore",
+    "foo":"file:./node_modules/foo/"
   }
 }

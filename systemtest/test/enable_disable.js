@@ -2,7 +2,7 @@
 
 var path = require("path");
 
-describe("system test fo mockify",function(){
+describe("system test for enable and disable method of mockify",function(){
     function RunTest(modulePath,mockPath) {
         var originalModule,testModule,testOriginalModule,mockModule;
 
@@ -33,27 +33,14 @@ describe("system test fo mockify",function(){
         });
     }
 
-    describe("Tests for localmodules",function(){
+    describe("Tests for mocked modules",function(){
         var testModules = {
-            "../lib/mymodule": "../mock_modules/lib/mymodule"
-        };
-
-        for(var i in testModules)
-            RunTest(i,testModules[i]);
-    });
-
-    describe("For node_modules and submodules",function(){
-        var testModules = {
-
-        };
-
-        for(var i in testModules)
-            RunTest(i,testModules[i]);
-    });
-
-    describe("For native modules",function(){
-        var testModules = {
-
+            "../lib/mymodule": "../mock_modules/lib/mymodule",
+            "../main.js": "../mock_modules/main.js",
+            "http": "../mock_modules/node_modules/http",
+            "foo": "../mock_modules/node_modules/foo",
+            "foo/optional": "../mock_modules/node_modules/foo/optional",
+            "foo/optional.js": "../mock_modules/node_modules/foo/optional.js",
         };
 
         for(var i in testModules)

@@ -12,6 +12,7 @@
     "coffee-script": "file:../node_modules/coffee-script"
   },
   "dependencies": {
-    "underscore": "file:../node_modules/underscore"
+    "underscore": "file:../node_modules/underscore",
+    "foo": "file:./test/foo_dependency"
   }
 }

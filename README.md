@@ -23,7 +23,10 @@ $ npm install --save-dev muon-mockify
 ```js
 $ git clone https://gitlab.muonapps.com/muon-group/muon-mockify
 $ npm install
-$ npm test
+
+$ npm test # xUnit-отчет о выполнении тестов будет помещен в файл ./reports/xunit.xml
+$ npm run-script systemtest # xUnit-отчет о выполнении системных тестов будет помещен в файл ./reports/xunit-system.xml
+
 $ npm link . # создаст глобальную ссылку на NPM модуль в системе, могут потребоваться права администратора
 
 # далее в Вашем проекте

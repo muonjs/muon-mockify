@@ -7,7 +7,6 @@ describe("system test fo mockify",function(){
         var originalModule,testModule,testOriginalModule,mockModule;
 
         describe("test: "+modulePath,function(){
-
             before(function(){
                 originalModule = require(modulePath);
                 mockModule = require(mockPath);

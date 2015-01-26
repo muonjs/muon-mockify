@@ -23,14 +23,14 @@ describe("module search mock unit test",function(){
 
     var testData = [
         { mockId: "http", parentId: path.resolve("./parent.js"), dirs: dirs, files: tempFs, result: path.resolve("./mock_modules/node_modules/http") },
-        { mockId: "path", parentId: path.resolve("./parent.js"), dirs: dirs, files: tempFs, result: "path" },
+        { mockId: "path", parentId: path.resolve("./parent.js"), dirs: dirs, files: tempFs, result: null },
         { mockId: "./main.js", parentId: path.resolve("./parent.js"), dirs: dirs, files: tempFs, result: path.resolve("./mock_modules/main.js") },
         { mockId: "./lib/mymodule", parentId: path.resolve("./parent.js"), dirs: dirs, files: tempFs, result: path.resolve("./mock_modules/lib/mymodule") },
         { mockId: "./lib/mymodule.coffee", parentId: path.resolve("./parent.js"), dirs: dirs, files: tempFs, result: path.resolve("./mock_modules/lib/mymodule.coffee") },
         { mockId: "../lib/../lib/mymodule", parentId: path.resolve("./temp/parent.js"), dirs: dirs, files: tempFs, result: path.resolve("./mock_modules/lib/mymodule") },
         { mockId: "../lib/mymodule", parentId: path.resolve("./temp/parent.js"), dirs: dirs, files: tempFs, result: path.resolve("./mock_modules/lib/mymodule") },
-        { mockId: "../lib/mymodule", parentId: path.resolve("./parent.js"), dirs: dirs, files: tempFs, result: "../lib/mymodule" },
-        { mockId: "./lib/mymodule", parentId: path.resolve("./node_modules/foo/parent.js"), dirs: dirs, files: tempFs, result: "./lib/mymodule" }
+        { mockId: "../lib/mymodule", parentId: path.resolve("./parent.js"), dirs: dirs, files: tempFs, result: null },
+        { mockId: "./lib/mymodule", parentId: path.resolve("./node_modules/foo/parent.js"), dirs: dirs, files: tempFs, result: null }
     ];
 
 
@@ -43,7 +43,7 @@ describe("module search mock unit test",function(){
             });
 
             it("should find: "+searchData.result,function(){
-                ret.should.equal(searchData.result);
+                expect(ret).to.be.equal(searchData.result);
             });
         });
     });

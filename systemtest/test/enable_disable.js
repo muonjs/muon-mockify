@@ -40,7 +40,7 @@ describe("system test for enable and disable method of mockify",function(){
             "http": "../mock_modules/node_modules/http",
             "foo": "../mock_modules/node_modules/foo",
             "foo/optional": "../mock_modules/node_modules/foo/optional",
-            "foo/optional.js": "../mock_modules/node_modules/foo/optional.js",
+            "foo/optional.js": "../mock_modules/node_modules/foo/optional.js"
         };
 
         for(var i in testModules)

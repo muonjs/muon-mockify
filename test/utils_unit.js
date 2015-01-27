@@ -189,27 +189,31 @@ describe("module utils removeExtension unit test",function(){
 
 describe("module utils should properly resolve path from parent",function(){
     var testData = {
+        "foo": "./main",
+        "moo": null,
         "some/foo": "./main",
         "../some": "./main",
         "/.some": "./lib/some",
         "./mock_modules/some": "./some",
+        "./mock_modules/other": null,
         "../node_modules/some/main.js": "./lib/some",
         "./other":"/moo/some"
     };
 
     var result = [
-        "./some/foo",
-        "../some",
-        "/.some",
-        "./mock_modules/some",
-        "./node_modules/some/main.js",
+        "foo",
+        "moo",
+        "some/foo",
+        path.resolve("../some"),
+        path.resolve("/.some"),
+        path.resolve("./mock_modules/some"),
+        path.resolve("./mock_modules/other"),
+        path.resolve("./node_modules/some/main.js"),
         "/moo/other"
-    ].map(function(a){
-        return path.resolve(a)
-    });
+    ];
 
     for(var i in testData){
         var resultDir = result.shift();
-        RunTestWith2Args("file "+i+" from "+testData[i] +" is: "+resultDir,"resolveFromParent",i,testData[i],resultDir);
+        RunTestWith2Args("file "+i+" from "+testData[i] +" is: "+resultDir,"resolve",i,testData[i],resultDir);
     }
 });

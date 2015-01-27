@@ -1,7 +1,8 @@
 describe("cache module unit test",function(){
 
     var lib = require("../lib/cache");
-    var path = require("path");
+    var path = require("path"),
+        _ = require("underscore");
 
     describe("cache module should properly add cache to list",function(){
 
@@ -26,10 +27,10 @@ describe("cache module unit test",function(){
 
         before(function(){
             for(var i in data){
-                lib.add(i,data[i]);
+                lib.add(".",i,data[i]);
             }
 
-            ret = lib.get().sort();
+            ret = _.keys(lib.get()).sort();
         });
 
         it("should match to result",function(){
@@ -75,8 +76,15 @@ describe("cache module unit test",function(){
         });
 
         before(function(){
-            initialCache.forEach(lib.add);
-            additionalCache.forEach(lib.add);
+            var counter = 0;
+            initialCache.forEach(function(file){
+                lib.add(file,"./original"+String(counter),"./some.js");
+                counter++;
+            });
+            additionalCache.forEach(function(file){
+                lib.add(file,"./original"+String(counter),"./some.js");
+                counter++;
+            });
 
             ret = lib.clean(cacheMock);
         });

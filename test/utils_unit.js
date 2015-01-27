@@ -79,6 +79,8 @@ describe("module utils isPackage unit test",function(){
         });
 
     [
+        ".",
+        "..",
         "./main.js",
         "../main.js",
         "/node_modules/foo/foo.js"

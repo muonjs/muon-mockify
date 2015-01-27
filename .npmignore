@@ -1,11 +1,12 @@
-node_modules
+/node_modules
+/systemtest/node_modules
+/example/node_modules
+!mock_modules/node_modules/
 npm-debug.log
 *.db
 .idea
 .DS_Store
 .*.bash
 .project
-reports/*
 reports
-sonar.properties
-example
+

@@ -37,7 +37,7 @@ describe("module utils check local unit",function(){
         "./lib/some",
         "./lib/some.coffee",
         "./mock_modules/some.coffee",
-        "./mock_modules/node_modules/some.coffee",
+        "./mock_modules/node_modules/some.coffee"
     ].forEach(function(i){
             RunTestWith2Args("check proper local files: "+i,"isLocal",i,path.resolve("."),true)
         });

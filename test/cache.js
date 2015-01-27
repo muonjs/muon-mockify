@@ -22,7 +22,7 @@ describe("cache module unit test",function(){
             path.resolve("./some.js"),
             path.resolve("./lib/other.js"),
             path.resolve("./mock_modules/some.js"),
-            path.resolve("./mock_modules/node_modules/some.js"),
+            path.resolve("./mock_modules/node_modules/some.js")
         ].sort();
 
         before(function(){

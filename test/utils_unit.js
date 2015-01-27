@@ -1,15 +1,15 @@
 var path = require("path");
 var lib = require("../lib/utils");
 
-function RunTestWithCWD(name,method,path,cwd,result){
+function RunTestWith2Args(name,method,first,second,result){
     describe(name,function(){
         var ret;
 
         before(function(){
-            ret = lib[method](path,cwd);
+            ret = lib[method](first,second);
         });
 
-        it(path+" : "+cwd,function(){
+        it(first+" : "+second,function(){
             expect(ret).to.be.equal(result);
         });
     });
@@ -30,14 +30,16 @@ function RunTest(name,method,path,result){
 }
 
 
-describe("module search check local unit",function(){
+describe("module utils check local unit",function(){
     [
         "./lib/mymodule.js",
         "./main.js",
         "./lib/some",
-        "./lib/some.coffee"
+        "./lib/some.coffee",
+        "./mock_modules/some.coffee",
+        "./mock_modules/node_modules/some.coffee",
     ].forEach(function(i){
-            RunTestWithCWD("check proper local files: "+i,"isLocal",i,path.resolve("."),true)
+            RunTestWith2Args("check proper local files: "+i,"isLocal",i,path.resolve("."),true)
         });
 
     [
@@ -45,11 +47,11 @@ describe("module search check local unit",function(){
         "../main.js",
         "./node_modules/foo/foo.js"
     ].forEach(function(i){
-            RunTestWithCWD("check proper remote files: "+i,"isLocal",i,path.resolve("."),false)
+            RunTestWith2Args("check proper remote files: "+i,"isLocal",i,path.resolve("."),false)
         });
 });
 
-describe("module search isAbsolute unit test",function(){
+describe("module utils isAbsolute unit test",function(){
     [
         "./lib/mymodule.js",
         "./main.js",
@@ -68,7 +70,7 @@ describe("module search isAbsolute unit test",function(){
         });
 });
 
-describe("module search isPackage unit test",function(){
+describe("module utils isPackage unit test",function(){
     [
         "some",
         "some/foo"
@@ -85,7 +87,7 @@ describe("module search isPackage unit test",function(){
         });
 });
 
-describe("module search isSubPackage unit test",function(){
+describe("module utils isSubPackage unit test",function(){
     [
         "some/foo",
         "some/foo/moo"
@@ -102,7 +104,7 @@ describe("module search isSubPackage unit test",function(){
         });
 });
 
-describe("module search hasExtension unit test",function(){
+describe("module utils hasExtension unit test",function(){
     [
         "some/foo.js",
         "some/foo/moo.coffee",
@@ -128,7 +130,7 @@ describe("module search hasExtension unit test",function(){
         });
 });
 
-describe("module search isHidden unit test",function(){
+describe("module utils isHidden unit test",function(){
     [
         ".foo.js",
         "some/foo/.moo.coffee",
@@ -149,7 +151,7 @@ describe("module search isHidden unit test",function(){
         });
 });
 
-describe("module search getExtension unit test",function(){
+describe("module utils getExtension unit test",function(){
     var testData = {
         "some/foo": null,
         "some/foo/moo": null,
@@ -166,7 +168,7 @@ describe("module search getExtension unit test",function(){
     }
 });
 
-describe("module search removeExtension unit test",function(){
+describe("module utils removeExtension unit test",function(){
     var testData = {
         "some/foo": "some/foo",
         "some/foo/moo": "some/foo/moo",
@@ -180,5 +182,32 @@ describe("module search removeExtension unit test",function(){
 
     for(var i in testData){
         RunTest("should make: "+i+" to be: "+testData[i],"removeExtension",i,testData[i]);
+    }
+});
+
+describe("module utils should properly resolve path from parent",function(){
+    var testData = {
+        "some/foo": "./main",
+        "../some": "./main",
+        "/.some": "./lib/some",
+        "./mock_modules/some": "./some",
+        "../node_modules/some/main.js": "./lib/some",
+        "./other":"/moo/some"
+    };
+
+    var result = [
+        "./some/foo",
+        "../some",
+        "/.some",
+        "./mock_modules/some",
+        "./node_modules/some/main.js",
+        "/moo/other"
+    ].map(function(a){
+        return path.resolve(a)
+    });
+
+    for(var i in testData){
+        var resultDir = result.shift();
+        RunTestWith2Args("file "+i+" from "+testData[i] +" is: "+resultDir,"resolveFromParent",i,testData[i],resultDir);
     }
 });

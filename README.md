@@ -7,7 +7,7 @@ ___
 ### Описание
 
 Данный модуль призван упростить процесс интеграционного и юнит-тестирования Вашего проекта.
-Модуль исходно разработан как часть среды интеграционного и юнит-тестирования веб-фреймворка [Muon.js](https://gitlab.muonapps.com/muonjs/muon), однако не зависет от него, поэтому Вы можете использовать muon-mockify для тестирования Ваших персональных проектов.
+Модуль исходно разработан как часть среды интеграционного и юнит-тестирования веб-фреймворка [Muon.js](https://gitlab.muonapps.com/muonjs/muon), однако не зависит от него, поэтому Вы можете использовать muon-mockify для тестирования Ваших персональных проектов.
 
 Модуль является надстройкой над методом `require` модуля `Module`, входящего в состав [Node.js](http://nodejs.org/api/modules.html#modules_module_require_id), и позволяет замещать экспортируемые модули на их mock-аналоги.
 
@@ -23,10 +23,7 @@ $ npm install --save-dev muon-mockify
 ```js
 $ git clone https://gitlab.muonapps.com/muon-group/muon-mockify
 $ npm install
-
-$ npm test # xUnit-отчет о выполнении тестов будет помещен в файл ./reports/xunit.xml
-$ npm run-script systemtest # xUnit-отчет о выполнении системных тестов будет помещен в файл ./reports/xunit-system.xml
-
+$ npm test
 $ npm link . # создаст глобальную ссылку на NPM модуль в системе, могут потребоваться права администратора
 
 # далее в Вашем проекте
@@ -35,7 +32,7 @@ $ npm link muon-mockify
 
 ### Спецификация и интерфейс
 
-Mockify выполняет подмену базового загрузчика модулей `require`, устанавливая поверх него специальную функцию-враппер, которая выполняет поиск mock-модулей в директории `./mock_modules` в корне проекта (либо в директориях определеннных методами `setMockifyDir` и `addMockifyDir`, далее везде **MOCKIFY_DIR**), и в случае успеха, замещает экспорт модуля соответствующим mock-объектом, либо объектом, переданным в mockify напряму через метод `mockify.enableMock`.
+Mockify выполняет подмену базового загрузчика модулей `require`, устанавливая поверх него специальную функцию-враппер, которая выполняет поиск mock-модулей в директории `./mock_modules` в корне проекта (либо в директориях определеннных методами `setMockifyDir` и `addMockifyDir`, далее везде **MOCKIFY_DIR**), и в случае успеха, замещает экспорт модуля соответствующим mock-объектом, либо объектом, переданным в mockify напряму через метод `mock`.
 
 #### Содержимое MockifyDir. Правила соответствия имен.
 
@@ -72,12 +69,9 @@ $ tree .
 - для *альтернативных модулей NPM-пакетов*, доступных через слэш, например, `require("foo/optional")` применяется правило формирования пути: **MOCKIFY_DIR+"/node_modules"+<имя модуля>+"/"+<путь к алтернативному модулю>**
 - Для *внутренних локальных модулей сторонних NPM-пакетов* правила поиска не применяются, всегда возвращается оригинальный модуль.
 
-**ВАЖНО**: При использовании `muon-mockify`, в частности при управлении директориями **MOCKIFY_DIR**, а также при определении, относится ли запрашиваемый модуль к проекту, или находится за его пределами и не должен быть замокан, используется текущая работчая директория процесса (Current Workin Directory: `process.cwd()`).
-Если вы запускаете тесты не из корневой директории Вашего проекта, либо сменили CWD в процессе их выполнения , `muon-mockify` может работать некорректно.
-
 Ниже представлена таблица сооветствия аргументов переданных в `require` и результирующих путей, по которым будет производиться поиск mock-объекта:
 
-| имя файла, из которого выполняется `require` | аргумент `require` | результирующий путь |
+| имя файла, из которого выполняется `requrie` | аргумент `require` | результирующий путь |
 | -------------------------------------------- | ------------------ | ------------------- |
 | ./main.js | ./lib/mymodule | ./mock_modules/lib/mymodule |
 | ./test/test.js | ../lib/mymodule | ./mock_modules/lib/mymodule |
@@ -91,7 +85,7 @@ $ tree .
 #### Набор доступных методов:
 - **mockfiy.enable( id | [ id ] )**
 
-Активирует функцию-враппер для метода `require` для модуля (модулей) с именем `id`, либо по-умолчанию для всех подключаемых модулей, если `id` не задан. После вызова данного метода, любой вызов `require` будет предварительно выполнять поиск соответствующих mock-модулей в директориях **MOCKIFY_DIR**. Если модуль существует, то вместо запрашиваемого модуля будет экспортирован найденный mock-объект. Если **MOCKIFY_DIR** включает в себя несколько директорий, и при этом более чем одна из директорий содержит запрашиваемый mock-модуль, `require` вернет первый найденный объект в соответсвии с порядком объявления директорий. Если же ни в одной из директорий **MOCKIFY_DIR** mock-объект не был найден, метод вернет исходный запрашиваемый модуль, либо выбросит исключения, если последний также отстутствует.
+Активирует функцию-враппер для метода `require`. После вызова данного метода, любой вызов `require` будет предварительно выполнять поиск соответствующего mock-модуля в директориях **MOCKIFY_DIR**. Если такой модуль существует, то вместо запрашиваемого модуля будет экспортирован найденный mock-объект. Если **MOCKIFY_DIR** включает в себя несколько директорий, и при этом более чем одна из директорий содержит запрашиваемый mock-модуль, `require` вернет первый найденный объект в соответсвии с порядком объявления директорий. Если же ни в одной из директорий **MOCKIFY_DIR** mock-объект не был найден, метод вернет исходный запрашиваемый модуль, либо выбросит исключения, если последний также отстутствует.
 
 ```js
 # ./main.js:
@@ -113,10 +107,7 @@ var foo_opt = require("foo/optional");
 var foo_opt_orig = mockify.original("foo/optional");
 console.log(foo_opt_orig === foo_opt); // FALSE
 ```
-
-В качестве опционального параметра в метод может быть передан путь к локальному модулю или имя внешнего модуля (либо список подобных путей и имен), для которых необходимо загружать mock-объкты. В этом случае функция враппер будет срабатывать только для указаных имен.
-
-**Важно**: Обратите внимание, что при передаче в метод `enable` аргумента - идентификатора модуля, используется путь данного модуля относительно текущей директории процесса, а не модуля, в котором этот метод вызван.
+В качестве опционального параметра в метод может быть передан путь к локальному модулю или имя внешнего модуля (либо список подобных путей и имен), для которых необходимо загружать mock-объкты. В этом случае функция враппер будет срабатывать только для указаных имен. 
 
 **Пример:**<br>
 ```js
@@ -132,13 +123,15 @@ console.log(foo_orig === foo); // TRUE
 
 mockify.disable();
 ```
-
 Повторное выполнение `mockify.enable` с аргументом добавит в список имен для поиска mock-объектов новые значения. При этом, если первый вызов был выполнен без аргумента, повторный вызов не будет иметь смысла и не приведет ни к каким изменениям.
-
 &nbsp;
-- **mockfiy.enableMock( id, mock )**
+- **mockify.isEnabled()**
 
-Также как и метод `mockify.enable` активирует враппер метода `require`, однако, вместо поиска модуля в файловой системе в директориях **MOCKIFY_DIR**, метод `require` вернет значение `mock`, переданное в качестве аргумента. Данный метод может быть вызван вместе с методом `mockify.enable`, при этом в процессе поиска mock-объекта приоритет будет за значением, переданным через `mockify.enableMock`.
+Возвращает состояние работы враппера.
+&nbsp;
+- **mockfiy.enableMock( path, mock )**
+
+Также как и метод `enable` активирует враппер метода `require`, однако, вместо поиска модуля в файловой системе в директориях **MOCKIFY_DIR**, метод `require` вернет значение `mock`, переданное в качестве аргумента. Данный метод может быть вызван вместе с методом `mockify.enable`, при этом в процессе поиска mock-объекта приоритет будет за значением, переданным через `mockify.enableMock`.
 
 **Пример:**<br>
 ```js
@@ -153,8 +146,6 @@ mockify.enableMock("http",httpMock);
 var http = require("http");
 console.log(http === httpMock); // TRUE
 ```
-
-Также как и в `enable` значение аргумента `id` при передаче в данный метод, определяет путь модуля относительного текущей директории процесса.
 
 &nbsp;
 - **mockfiy.removeMock( [ id ] )**
@@ -226,8 +217,7 @@ console.log(mockify.getMockifyDirs());
 
 ### Примеры тестов
 
-Ниже приведен небольшой туториал - пример тестирования примитивного HTTP клиента, работающего поверх нативного Node.js модуля `http`.
-
+Ниже приведен пример тестирования некоторого HTTP клиента, работающего поверх нативного Node.js модуля `http` и упрощающего процедуру получения данных с удаленного сервера.
 ```js
 # ./lib/myhttpclient.js
 
@@ -279,44 +269,37 @@ module.exports = function HttpMock(httpMockStatus,httpMockRet){
         get: function(url,callback){
             callback(new IncomingMessageMock(httpMockStatus,httpMockRet))
         }
-    });
+    }
 }
 ```
 
 Теперь мы готовы написать сам тест совместно с `muon-mockify`:
 
 ```js
-# ./test/httpclientTest.js
-
 require("chai").should();
 var expect = require("chai").expect,
+    var util = require("util"),
     mockify = require("muon-mockify");
 
-describe("test case for HTTP Mock",function(){
-
-    // Исходные данные
+describe("test case #2 for HTTP Mock",function(){
     var httpMockRet = "<strong>Success</strong>",
         httpMockStatus = 200,
+        retData, retStatus, retErr,
         HttpMock = require("./http-mock");
-        
-    var retData, retStatus, retErr;
     
     before(function() {
-        /// Активируем враппер require и замещаем модуль 'http' mock-объектом
+        /// активируем враппер require и замещаем модуль 'http' mock-объеком
         mockify.enableMock("http",new HttpMock(httpMockStatus,httpMockRet));
-    });
+    }
     
-    // Выполняем метод
-    before(function(done){
-        mockify.original("./lib/myhttpclient").get("http://foo.bar",function(err,status,data){
+    before(function(){
+        mockify.original("./lib/myajaxclient").get("http://foo.bar",function(err,status,data){
             retErr = err;
             retData = data;
             retStatus = status;
-            done();
         });
     });
     
-    // Выполняем серию проверок
     it("err should be null",function(){
         expect(retErr).to.be.a("null");
     });  
@@ -337,136 +320,10 @@ describe("test case for HTTP Mock",function(){
         retStatus.shoud.be.equal(httpMockStatus);
     });
     
-    // Отключаем враппер, чтобы не влиять на другие тесты
-    after(mockify.disable);
-});
-```
-В определенный момент Вам станет ясно, что реализация mock-модуля HttpMock (и любых других подобных модулей) стала достаточно универсальной, и Вы можете использовать ее также в остальных сетевых тестах. Тогда соответствующий модуль будет целесообразно поместить в **MOCKIFY_DIR**.
-
-Теперь предположим, что у нас есть еще один модуль, который выполняет обработку данных, полученных с помощью нашего же HttpClient.
-```js
-# ./lib/dataproc.js
-
-var httpClient = require("./myhttpclient");
-
-exports.jsonify = function(source,callback) {
-    httpClient.get(source,function(err,status,data) {
-        if (!!err) return callback(err);
-        if (status != 200) return callback({ status: status, message: "data source is not available"});
-        try {
-            callback(null,JSON.parse(data));
-        }
-        catch(e){
-            callback(e);
-        }
-    });
-}
-    
-exports.xmlify = function(source,callback) {
-    ...
-}
-
-```
-
-Для тестирования данного модуля нам потребуется mock-реализация локального модуля HttpClient:
-```js
-# ./mock_modules/lib/myhttpclient.js
-
-var mockErr,mockStatus,mockData; 
-exports.setup = function(err,status,data){
-    mockStatus = status;
-    mockData = data;
-}
-
-exports.get = function(source,callback) {
-    callback(mockErr,mockStatus,mockData);
-}
-```
-
-В отличии от HttpMock модуля, мы создали настраиваемый вариант mock-объекта и разместили в директории **MOCKIFY_DIR**. По этому сам тест может быть немного упрощен:
-```js
-# ./test/dataprocTest.js
-
-
-require("chai").should();
-var expect = require("chai").expect,
-    mockify = require("muon-mockify");
-
-describe("test case for data processor",function(){
-    var dummySource = "http://foo.bar",
-        initialStatus = 200,
-        initialData = "{ \"status\": \"Success\" }",
-        initialObject = JSON.parse(initialData),
-        testError,testObject;
-        
-    // Подключаем MOCKIFY_DIR и настраиваем mock-объект
-    before(function(){
-        mockify.enable();
-        require("../lib/myhttpclient.js").setup(null,initialStatus,initialData);
-    });
-    
-    // Запускаем сценарий
-    before(function(done) {
-        mockify.original("../lib/dataproc.js").jsonify(dummySource,function(err,data){
-            testError = err;
-            testData = data;
-            done();
-        });
-    });
-    
-    // Проверяем результат
-    it("err should be a null",function(){
-        expect(testError).to.be.a("null");
-    });
-    
-    it("ret data should match to initial object",function(){
-        testObject.should.be.equal(initialObject);
-    });
-    
-    // Отключаем враппер
     after(mockify.disable);
 });
 ```
 
-и так далее..
-
-#### Что дальше...
-
-В последствии при создании сьюит юнит-тестов Вы сможете определить глобальный `setup` и `teardown` методы, которые будут активировать враппер `require`.
-Доступ к тестрируемому модулю следует выполнять с помощью метода `mockify.original`. Для `mocha` тестов это будет выглядеть примерно следующим образом:
-
-```js
-describe("unit test suite",function(){
-    before(function(){
-        mockify.enable();
-    });
-    
-    describe("test case for ./mymodule1",function(){
-        before(function() {
-            mockify.original("../lib/mymodule1").run( ... );
-        });
-        
-        it ("check it" ,function() { ... });
-    });
-    
-    describe("test case for ./mymodule2",function(){
-        before(function() {
-            mockify.original("../lib/mymodule2").run( ... );
-        });
-        
-        it ("check it" ,function() { ... });
-    });
-    
-    ...
-    
-    after(mockify.disable);
-});
-```
-
-Помимо этого вы также можете создавать отдельные сьюиты с независимыми тестовыми сценариями.
-В сложном проекте это может быть удобно для тестирования отдельных значимых аспектов поведения программного продукта.
-Добиться этого можно, используя наборы mock-модулей с согласованным поведением и (или) набором тестовых данных, 
-помещенных в отдельные переключаемые директории **MOCKIFY_DIR**.
 ____
 
 #### Лицензия

@@ -125,4 +125,10 @@ describe("mockify.removeMock",function(){
             mockify.disable();
         });
     });
+
+    describe("check fo excludeMock presence",function(){
+        it ("should be duplication of removeMock",function(){
+            expect(mockify.excludeMock === mockify.removeMock).to.be.true;
+        });
+    });
 });

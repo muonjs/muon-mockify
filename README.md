@@ -176,7 +176,10 @@ console.log(mymodule_orig === mymodule); // TRUE
 - **mockfiy.disable()**
 
 Отключает враппер `require`, а также очищает кэш загруженных модулей. Также отменяет все действия и фильтры, установленные методами `mockify.enable`, `mockify.enableMock` и `mockify.removeMock`.
+&nbsp;
+- **mockify.isEnabled()**
 
+Возвращает состояние работы враппера.
 &nbsp;
 - **mockfiy.original( id )**
 

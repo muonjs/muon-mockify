@@ -1,6 +1,9 @@
 /node_modules
-/systemtest/node_modules
-/example/node_modules
+/systemtest
+/example
+/test
+/reports
+/README.*.md
 !mock_modules/node_modules/
 npm-debug.log
 *.db
@@ -8,5 +11,4 @@ npm-debug.log
 .DS_Store
 .*.bash
 .project
-reports
 

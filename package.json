@@ -1,20 +1,20 @@
 {
   "name": "muon-mockify",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "The easiest way to mockify your project",
   "main": "main.js",
   "scripts": {
     "clean": "rm -rf reports || true; rm -rf node_modules; rm -rf systemtest/node_modules",
     "pretest": "mkdir reports || true",
-    "test": "./node_modules/.bin/mocha -C --reporter xunit > reports/xunit.xml || true",
+    "test": "./node_modules/.bin/mocha -C --reporter xunit 1> reports/xunit.xml || true",
     "posttest": "chmod 777 reports/*.xml || true",
     "presystemtest": "(mkdir reports || true) && (rm -rf systemtest/node_modules/* || true)",
-    "systemtest": "cd systemtest && npm install &&  (./node_modules/.bin/mocha -C --reporter xunit > ../reports/xunit-system.xml || true) && cd ..",
+    "systemtest": "cd systemtest && npm install &&  (./node_modules/.bin/mocha -C --reporter xunit 1> ../reports/xunit-system.xml || true) && cd ..",
     "postsystemtest": "chmod 777 reports/*.xml || true",
-    "systemsimple": "rm -rf systemtest/node_modules && cd systemtest && npm install &&  (./node_modules/.bin/mocha --reporter dot || true)  && cd ..",
+    "systemsimple": "rm -rf systemtest/node_modules && cd systemtest && npm install &&  (./node_modules/.bin/mocha -g '' --reporter dot || true)  && cd ..",
     "preexampletest": "(mkdir reports || true) && (rm -rf example/node_modules/* || true)",
-    "exampletest": "cd example && npm install && (./node_modules/.bin/mocha -C --reporter xunit > ../reports/xunit-example.xml || true) && cd ..",
-    "examplesimple": "cd example && npm install && (./node_modules/.bin/mocha --reporter min || true) && cd ..",
+    "exampletest": "cd example && npm install && (./node_modules/.bin/mocha -C --reporter xunit 1> ../reports/xunit-example.xml || true) && cd ..",
+    "examplesimple": "cd example && npm install && (./node_modules/.bin/mocha --reporter min || true) && cd .." ,
     "postexampletest": "chmod 777 reports/*.xml || true"
   },
   "repository": {

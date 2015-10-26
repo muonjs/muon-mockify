@@ -1,6 +1,6 @@
-describe("mockify.setMockifyDir & mockify.addMockifyDir",function(){
+describe("mockify.setMockifyDir & mockify.addMockifyDir\n",function(){
 
-    describe("should find secondmodule in mock_modules and thirdmodule in mock_modules2",function(){
+    describe("should find second module in mock_modules and third module in mock_modules2\n",function(){
         var secondMock, thirdMock,
             secondTest, thirdTest;
 
@@ -26,7 +26,7 @@ describe("mockify.setMockifyDir & mockify.addMockifyDir",function(){
         });
     });
 
-    describe("should find secondmodule and thirdmodule in mock_modules2",function(){
+    describe("should find second module and third module in mock_modules2\n",function(){
         var secondMock, thirdMock,
             secondTest, thirdTest;
 
@@ -43,11 +43,11 @@ describe("mockify.setMockifyDir & mockify.addMockifyDir",function(){
             thirdTest = require(thirdModule);
         });
 
-        it("should find secondmodule in default mock_modules2",function(){
+        it("should find second module in default mock_modules2",function(){
             secondTest.filename.should.be.eql(secondMock.filename);
         });
 
-        it("should find thirdmodule in default mock_modules2",function(){
+        it("should find third module in default mock_modules2",function(){
             thirdTest.filename.should.be.eql(thirdMock.filename);
         });
     });

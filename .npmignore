@@ -3,7 +3,7 @@
 /example
 /test
 /reports
-/README.*.md
+/README
 !mock_modules/node_modules/
 npm-debug.log
 *.db

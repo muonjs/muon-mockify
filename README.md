@@ -102,7 +102,7 @@ var mockify = require("muon-mockify");
 mockify.enable();
 var mymodule = require("./lib/mymodule");
 var mymodule_alt = require("./lib/../lib/mymodule");
-var mymodule_orig = mockify.original("mymodule");
+var mymodule_orig = mockify.original("./lib/mymodule");
 var mymodule_mock = mockify.original("./mock_modules/lib/mymodule");
 console.log(mymodule_orig === mymodule); // FALSE
 console.log(mymodule_mock === mymodule); // TRUE
@@ -125,8 +125,8 @@ console.log(foo_opt_orig === foo_opt); // FALSE
 ```js
 var mockify = require("muon-mockify");
 mockify.enable("./lib/mymodule");   // или mockify.enable(["./lib/mymodule"]);
-var mymodule = require("mymodule");
-var mymodule_orig = mockify.original("mymodule");
+var mymodule = require("./lib/mymodule");
+var mymodule_orig = mockify.original("./lib/mymodule");
 console.log(mymodule_orig === mymodule); // FALSE
 
 var foo = require("foo");

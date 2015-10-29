@@ -4,10 +4,13 @@
 
 ___
 
+
+
+
 ### Описание
 
 Данный модуль призван упростить процесс интеграционного и юнит-тестирования Вашего проекта.
-Модуль исходно разработан как часть среды интеграционного и юнит-тестирования веб-фреймворка [Muon.js](https://gitlab.muonapps.com/muonjs/muon), однако не зависет от него, поэтому Вы можете использовать muon-mockify для тестирования Ваших персональных проектов.
+Модуль исходно разработан как часть среды интеграционного и юнит-тестирования веб-фреймворка [Muon.js](https://gitlab.muonapps.com/muonjs/muon), однако не зависит от него, поэтому Вы можете использовать muon-mockify для тестирования Ваших персональных проектов.
 
 Модуль является надстройкой над методом `require` модуля `Module`, входящего в состав [Node.js](http://nodejs.org/api/modules.html#modules_module_require_id), и позволяет замещать экспортируемые модули на их mock-аналоги.
 
@@ -99,7 +102,7 @@ var mockify = require("muon-mockify");
 mockify.enable();
 var mymodule = require("./lib/mymodule");
 var mymodule_alt = require("./lib/../lib/mymodule");
-var mymodule_orig = mockify.original("mymodule");
+var mymodule_orig = mockify.original("./lib/mymodule");
 var mymodule_mock = mockify.original("./mock_modules/lib/mymodule");
 console.log(mymodule_orig === mymodule); // FALSE
 console.log(mymodule_mock === mymodule); // TRUE
@@ -122,8 +125,8 @@ console.log(foo_opt_orig === foo_opt); // FALSE
 ```js
 var mockify = require("muon-mockify");
 mockify.enable("./lib/mymodule");   // или mockify.enable(["./lib/mymodule"]);
-var mymodule = require("mymodule");
-var mymodule_orig = mockify.original("mymodule");
+var mymodule = require("./lib/mymodule");
+var mymodule_orig = mockify.original("./lib/mymodule");
 console.log(mymodule_orig === mymodule); // FALSE
 
 var foo = require("foo");
@@ -157,7 +160,7 @@ console.log(http === httpMock); // TRUE
 Также как и в `enable` значение аргумента `id` при передаче в данный метод, определяет путь модуля относительного текущей директории процесса.
 
 &nbsp;
-- **mockfiy.removeMock( [ id ] )**, **mockfiy.excludeMock( [ id ] )**
+- **mockfiy.removeMock( [ id ] )**
 
 Вызов данного метода отменяет действие вызова `mockify.enableMock` для имен и/или путей переданных в качестве аргумента, а также добавляет соответствующие имена в игнорируемый список в процессе поиска mock-модулей в файловой системе в директориях
 **MOCKIFY_DIR**. Также метод очищает require кэш для указанных модулей, таким образом повторный экспорт указанных модулей приведет к их повторной загрузке и исполнению. Данный метод может быть полезен, когда требуется исключить из полного списка существующих mock-объектов, подключаемых через `mockify.enable`,  один или несколько модулей. 
@@ -171,8 +174,6 @@ var mymodule = require("./lib/mymodule");
 var mymodule_orig = mockify.original("./lib/mymodule");
 console.log(mymodule_orig === mymodule); // TRUE
 ```
-
-Вместо метода `removeMock` возможно использование метода `exlcludeMock`, который выполняет те же действия, что и первый, и фактически является его альясом. В Ваших тестах Вы можете использовать то имя, которое Вам кажется более понятным и логичным.
 
 &nbsp;
 - **mockfiy.disable()**

@@ -1,3 +1,5 @@
+[![Build Status](https://muonapps.com/jenkins/buildStatus/icon?job=muon_group_mockify_pull_request_builder)](https://muonapps.com/jenkins/view/muon-group/job/muon_group_mockify_pull_request_builder/)
+
 # Muon Mockify
 
 Простой способ замокать ваш проект.

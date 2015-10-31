@@ -1,5 +1,5 @@
-describe("mockify.disable method\n",function(){
-    describe("disable should stops hook and return proper original modules: \n",function(){
+describe("mockify.disable method",function(){
+    describe("disable should stops hook and return proper original modules: ",function(){
         var originalModule, mockedModule, postDisableModule;
         var moduleName = "../lib/mymodule";
         var _ = require("underscore");
@@ -16,8 +16,8 @@ describe("mockify.disable method\n",function(){
             originalModule.should.not.be.eql(mockedModule);
         });
 
-        it("original module should not be the same object as post disable module (original cache should be cleaned)",function(){
-            (originalModule === postDisableModule).should.be.true();
+        it("original module should not be the same object as post disable module (cache should be cleaned)",function(){
+            originalModule.should.not.be.equal(postDisableModule);
         });
 
         it("original module should have the same interface as post disable module",function(){

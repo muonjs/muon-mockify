@@ -1,7 +1,7 @@
 {
   "name": "muon-mockify",
-  "version": "0.3.0",
-  "description": "The easiest way to mockify your project",
+  "version": "0.3.1",
+  "description": "The way you mock your project",
   "main": "main.js",
   "scripts": {
     "clean": "rm -rf reports || true; rm -rf node_modules; rm -rf systemtest/node_modules",

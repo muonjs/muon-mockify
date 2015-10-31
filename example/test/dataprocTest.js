@@ -20,7 +20,7 @@ describe("test case for data processor",function(){
     before(function(done) {
         mockify.original("../lib/dataproc.js").jsonify(dummySource,function(err,data){
             testError = err;
-            testData = data;
+            testObject = data;
             done();
         });
     });
@@ -31,7 +31,7 @@ describe("test case for data processor",function(){
     });
 
     it("ret data should match to initial object",function(){
-        testObject.should.be.equal(initialObject);
+        testObject.should.be.eql(initialObject);
     });
 
     // Отключаем враппер

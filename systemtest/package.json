@@ -9,7 +9,8 @@
     "chai": "file:../node_modules/chai",
     "mocha": "file:../node_modules/mocha",
     "muon-mockify": "file:../",
-    "coffee-script": "file:../node_modules/coffee-script"
+    "coffee-script": "file:../node_modules/coffee-script",
+    "iconv": "*"
   },
   "dependencies": {
     "underscore": "file:../node_modules/underscore",

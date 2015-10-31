@@ -2,23 +2,25 @@ require("chai").should();
 var expect = require("chai").expect,
     mockify = require("muon-mockify");
 
+
+
 describe("test case for HTTP Mock",function(){
 
     // Исходные данные
     var httpMockRet = "<strong>Success</strong>",
-        httpMockStatus = 200,
-        HttpMock = require("./http-mock");
+        httpMockStatus = 200;
 
     var retData, retStatus, retErr;
 
     before(function() {
         /// Активируем враппер require и замещаем модуль 'http' mock-объектом
-        mockify.enableMock("http",new HttpMock(httpMockStatus,httpMockRet));
+        mockify.enable("http");
+        var http = require("http")._setup(httpMockStatus,httpMockRet);
     });
 
     // Выполняем метод
     before(function(done){
-        mockify.original("./lib/myhttpclient").get("http://foo.bar",function(err,status,data){
+        mockify.original("../lib/myhttpclient").get("http://foo.bar",function(err,status,data){
             retErr = err;
             retData = data;
             retStatus = status;
@@ -40,11 +42,11 @@ describe("test case for HTTP Mock",function(){
     });
 
     it("data should be success",function(){
-        retData.shoud.be.equal(httpMockRet);
+        retData.should.be.equal(httpMockRet);
     });
 
     it("status should be ok",function(){
-        retStatus.shoud.be.equal(httpMockStatus);
+        retStatus.should.be.equal(httpMockStatus);
     });
 
     // Отключаем враппер, чтобы не влиять на другие тесты

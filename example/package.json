@@ -11,7 +11,6 @@
     "muon-mockify": "file:../"
   },
   "dependencies": {
-    "underscore": "file:../node_modules/underscore",
-    "foo":"file:./node_modules/foo/"
+    "underscore": "file:../node_modules/underscore"
   }
 }

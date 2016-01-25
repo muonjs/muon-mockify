@@ -99,10 +99,10 @@ describe("Mockify.enable and mockify.original.",function(){
     });
 
     describe("Multiple times enable call with first simple call (with no args).",function(){
-        const MODULE_1 = path.resolve("./lib/mymodule");
-        const MODULE_2 = path.resolve("./lib/secondmodule");
-        const MOCK_MODULE_1 = path.resolve("./mock_modules/lib/mymodule");
-        const MOCK_MODULE_2 = path.resolve("./mock_modules/lib/secondmodule");
+        var MODULE_1 = path.resolve("./lib/mymodule");
+        var MODULE_2 = path.resolve("./lib/secondmodule");
+        var MOCK_MODULE_1 = path.resolve("./mock_modules/lib/mymodule");
+        var MOCK_MODULE_2 = path.resolve("./mock_modules/lib/secondmodule");
         var originalModule,testModule,testOriginalModule,mockModule,
             originalModule2,testModule2,testOriginalModule2,mockModule2;
 
@@ -149,10 +149,10 @@ describe("Mockify.enable and mockify.original.",function(){
     });
 
     describe("Enable call with no argument should discard previously set mock filter.",function(){
-        const MODULE_1 = path.resolve("./lib/mymodule");
-        const MODULE_2 = path.resolve("./lib/secondmodule");
-        const MOCK_MODULE_1 = path.resolve("./mock_modules/lib/mymodule");
-        const MOCK_MODULE_2 = path.resolve("./mock_modules/lib/secondmodule");
+        var MODULE_1 = path.resolve("./lib/mymodule");
+        var MODULE_2 = path.resolve("./lib/secondmodule");
+        var MOCK_MODULE_1 = path.resolve("./mock_modules/lib/mymodule");
+        var MOCK_MODULE_2 = path.resolve("./mock_modules/lib/secondmodule");
         var originalModule,testModule,testOriginalModule,mockModule,
             originalModule2,testModule2,testOriginalModule2,mockModule2;
 
@@ -199,11 +199,11 @@ describe("Mockify.enable and mockify.original.",function(){
     });
 
     describe("Multiple times enable call.",function(){
-        const MODULE_1 = path.resolve("./lib/mymodule");
-        const MODULE_2 = path.resolve("./lib/secondmodule");
-        const MOCK_MODULE_1 = path.resolve("./mock_modules/lib/mymodule");
-        const MOCK_MODULE_2 = path.resolve("./mock_modules/lib/secondmodule");
-        const DISABLED_MODULE = path.resolve("./main");
+        var MODULE_1 = path.resolve("./lib/mymodule");
+        var MODULE_2 = path.resolve("./lib/secondmodule");
+        var MOCK_MODULE_1 = path.resolve("./mock_modules/lib/mymodule");
+        var MOCK_MODULE_2 = path.resolve("./mock_modules/lib/secondmodule");
+        var DISABLED_MODULE = path.resolve("./main");
         var originalModule,testModule,testOriginalModule,mockModule,
             originalModule2,testModule2,testOriginalModule2,mockModule2,
             disabledModule,disabledModuleOriginal;

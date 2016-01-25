@@ -6,14 +6,14 @@
   "scripts": {
     "clean": "rm -rf reports || true; rm -rf node_modules; rm -rf systemtest/node_modules; rm -rf example/node_modules",
     "pretest": "mkdir reports || true",
-    "test": "mocha -C --reporter xunit 1> reports/xunit.xml || true",
+    "test": "mocha -C --reporter xunit 1> reports/xunit.xml || true && sync",
     "posttest": "chmod 777 reports/*.xml || true",
     "presystemtest": "(mkdir reports || true) && (rm -rf systemtest/node_modules/* || true)",
-    "systemtest": "cd systemtest && npm install &&  (mocha -C --reporter xunit 1> ../reports/xunit-system.xml || true) && cd ..",
+    "systemtest": "cd systemtest && npm install &&  (mocha -C --reporter xunit 1> ../reports/xunit-system.xml || true) && sync &&  cd ..",
     "postsystemtest": "chmod 777 reports/*.xml || true",
     "systemsimple": "rm -rf systemtest/node_modules && cd systemtest && npm install &&  (mocha -g '' --reporter dot || true)  && cd ..",
     "preexampletest": "(mkdir reports || true) && (rm -rf example/node_modules/* || true)",
-    "exampletest": "cd example && npm install && (mocha -C --reporter xunit 1> ../reports/xunit-example.xml || true) && cd ..",
+    "exampletest": "cd example && npm install && (mocha -C --reporter xunit 1> ../reports/xunit-example.xml || true) && sync && cd ..",
     "examplesimple": "cd example && npm install && (mocha --reporter min || true) && cd .." ,
     "postexampletest": "chmod 777 reports/*.xml || true"
   },

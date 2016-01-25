@@ -98,6 +98,106 @@ describe("Mockify.enable and mockify.original.",function(){
         RunTestWidthArguments(["./lib/mymodule","./lib/secondmodule"]);
     });
 
+    describe("Multiple times enable call with first simple call (with no args).",function(){
+        const MODULE_1 = path.resolve("./lib/mymodule");
+        const MODULE_2 = path.resolve("./lib/secondmodule");
+        const MOCK_MODULE_1 = path.resolve("./mock_modules/lib/mymodule");
+        const MOCK_MODULE_2 = path.resolve("./mock_modules/lib/secondmodule");
+        var originalModule,testModule,testOriginalModule,mockModule,
+            originalModule2,testModule2,testOriginalModule2,mockModule2;
+
+        before(function(){
+            originalModule = require(MODULE_1);
+            originalModule2 = require(MODULE_2);
+            mockModule = require(MOCK_MODULE_1);
+            mockModule2 = require(MOCK_MODULE_2);
+            mockify.enable();
+            mockify.enable(MODULE_2);
+            testModule = require(MODULE_1);
+            testModule2 = require(MODULE_2);
+            testOriginalModule = mockify.original(MODULE_1);
+            testOriginalModule2 = mockify.original(MODULE_2);
+        });
+
+        it("original 1 should not match to test module",function(){
+            expect(testModule.filename).not.to.be.equal(originalModule.filename);
+        });
+
+        it("original 1 mock should match to test module",function(){
+            expect(testModule.filename).to.be.equal(mockModule.filename);
+        });
+
+        it("original 1 should match to mockify.original",function(){
+            expect(testOriginalModule.filename).to.be.equal(originalModule.filename);
+        });
+
+        it("original 2 should not match to test module",function(){
+            expect(testModule2.filename).not.to.be.equal(originalModule2.filename);
+        });
+
+        it("original 2 mock should match to test module",function(){
+            expect(testModule2.filename).to.be.equal(mockModule2.filename);
+        });
+
+        it("original 2 should match to mockify.original",function(){
+            expect(testOriginalModule2.filename).to.be.equal(originalModule2.filename);
+        });
+
+        after(function(){
+            mockify.disable();
+        });
+    });
+
+    describe("Enable call with no argument should discard previously set mock filter.",function(){
+        const MODULE_1 = path.resolve("./lib/mymodule");
+        const MODULE_2 = path.resolve("./lib/secondmodule");
+        const MOCK_MODULE_1 = path.resolve("./mock_modules/lib/mymodule");
+        const MOCK_MODULE_2 = path.resolve("./mock_modules/lib/secondmodule");
+        var originalModule,testModule,testOriginalModule,mockModule,
+            originalModule2,testModule2,testOriginalModule2,mockModule2;
+
+        before(function(){
+            originalModule = require(MODULE_1);
+            originalModule2 = require(MODULE_2);
+            mockModule = require(MOCK_MODULE_1);
+            mockModule2 = require(MOCK_MODULE_2);
+            mockify.enable(MODULE_2);
+            mockify.enable();
+            testModule = require(MODULE_1);
+            testModule2 = require(MODULE_2);
+            testOriginalModule = mockify.original(MODULE_1);
+            testOriginalModule2 = mockify.original(MODULE_2);
+        });
+
+        it("original 1 should not match to test module",function(){
+            expect(testModule.filename).not.to.be.equal(originalModule.filename);
+        });
+
+        it("original 1 mock should match to test module",function(){
+            expect(testModule.filename).to.be.equal(mockModule.filename);
+        });
+
+        it("original 1 should match to mockify.original",function(){
+            expect(testOriginalModule.filename).to.be.equal(originalModule.filename);
+        });
+
+        it("original 2 should not match to test module",function(){
+            expect(testModule2.filename).not.to.be.equal(originalModule2.filename);
+        });
+
+        it("original 2 mock should match to test module",function(){
+            expect(testModule2.filename).to.be.equal(mockModule2.filename);
+        });
+
+        it("original 2 should match to mockify.original",function(){
+            expect(testOriginalModule2.filename).to.be.equal(originalModule2.filename);
+        });
+
+        after(function(){
+            mockify.disable();
+        });
+    });
+
     describe("Multiple times enable call.",function(){
         const MODULE_1 = path.resolve("./lib/mymodule");
         const MODULE_2 = path.resolve("./lib/secondmodule");
@@ -154,5 +254,5 @@ describe("Mockify.enable and mockify.original.",function(){
         after(function(){
             mockify.disable();
         });
-    })
+    });
 });

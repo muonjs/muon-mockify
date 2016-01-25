@@ -1,11 +1,15 @@
-describe("mockify.enable and mockify.original",function(){
+'use strict';
+
+var path = require("path");
+
+describe("Mockify.enable and mockify.original.",function(){
     var path = require("path");
 
-    describe("system test for enable and disable method of mockify",function(){
+    describe("Enable and disable.",function(){
         function RunTest(modulePath,mockPath) {
             var originalModule,testModule,testOriginalModule,mockModule;
 
-            describe("test: "+modulePath,function(){
+            describe("test: "+modulePath+".",function(){
                 before(function(){
                     originalModule = require(modulePath);
                     mockModule = require(mockPath);
@@ -32,7 +36,7 @@ describe("mockify.enable and mockify.original",function(){
             });
         }
 
-        describe("Tests for mocked modules",function(){
+        describe("Tests for mocked modules.",function(){
             var testModules = {
                 "../lib/mymodule": "../mock_modules/lib/mymodule",
                 "../main.js": "../mock_modules/main.js",
@@ -47,22 +51,20 @@ describe("mockify.enable and mockify.original",function(){
         });
     });
 
-    describe("system test for enable  method with arguments of mockify",function(){
+    describe("Enable method with argument.",function(){
         var RunTestWidthArguments = function(args) {
             var originalModule,testModule,testOriginalModule,mockModule,
-                disabledModule,disabledModuleOriginal,disabledMockOriginal;
+                disabledModule,disabledModuleOriginal;
 
             var modulePath = "../lib/mymodule",
                 mockPath = "../mock_modules/lib/mymodule",
-                disabledPath = "../main",
-                disabledMockPath = "../mock_modules/main";
+                disabledPath = "../main";
 
             describe("test: "+JSON.stringify(args),function(){
                 before(function(){
                     originalModule = require(modulePath);
                     mockModule = require(mockPath);
                     disabledModuleOriginal = require(disabledPath);
-                    disabledMockOriginal = require(disabledMockPath);
                     mockify.enable(args);
                     testModule = require(modulePath);
                     testOriginalModule = mockify.original(modulePath);
@@ -93,6 +95,64 @@ describe("mockify.enable and mockify.original",function(){
 
         RunTestWidthArguments("./lib/mymodule");
         RunTestWidthArguments(["./lib/mymodule"]);
-        RunTestWidthArguments(["./lib/mymodule","./lib/mymodule2"]);
+        RunTestWidthArguments(["./lib/mymodule","./lib/secondmodule"]);
     });
+
+    describe("Multiple times enable call.",function(){
+        const MODULE_1 = path.resolve("./lib/mymodule");
+        const MODULE_2 = path.resolve("./lib/secondmodule");
+        const MOCK_MODULE_1 = path.resolve("./mock_modules/lib/mymodule");
+        const MOCK_MODULE_2 = path.resolve("./mock_modules/lib/secondmodule");
+        const DISABLED_MODULE = path.resolve("./main");
+        var originalModule,testModule,testOriginalModule,mockModule,
+            originalModule2,testModule2,testOriginalModule2,mockModule2,
+            disabledModule,disabledModuleOriginal;
+
+        before(function(){
+            originalModule = require(MODULE_1);
+            originalModule2 = require(MODULE_2);
+            mockModule = require(MOCK_MODULE_1);
+            mockModule2 = require(MOCK_MODULE_2);
+            disabledModuleOriginal = require(DISABLED_MODULE);
+            mockify.enable(MODULE_1);
+            mockify.enable(MODULE_2);
+            testModule = require(MODULE_1);
+            testModule2 = require(MODULE_2);
+            testOriginalModule = mockify.original(MODULE_1);
+            testOriginalModule2 = mockify.original(MODULE_2);
+            disabledModule = require(DISABLED_MODULE)
+        });
+
+        it("original 1 should not match to test module",function(){
+            expect(testModule.filename).not.to.be.equal(originalModule.filename);
+        });
+
+        it("original 1 mock should match to test module",function(){
+            expect(testModule.filename).to.be.equal(mockModule.filename);
+        });
+
+        it("original 1 should match to mockify.original",function(){
+            expect(testOriginalModule.filename).to.be.equal(originalModule.filename);
+        });
+
+        it("original 2 should not match to test module",function(){
+            expect(testModule2.filename).not.to.be.equal(originalModule2.filename);
+        });
+
+        it("original 2 mock should match to test module",function(){
+            expect(testModule2.filename).to.be.equal(mockModule2.filename);
+        });
+
+        it("original 2 should match to mockify.original",function(){
+            expect(testOriginalModule2.filename).to.be.equal(originalModule2.filename);
+        });
+
+        it("module not in arguments should match to original module",function(){
+            expect(disabledModule.filename).to.be.equal(disabledModuleOriginal.filename);
+        });
+
+        after(function(){
+            mockify.disable();
+        });
+    })
 });

@@ -6,6 +6,7 @@
 /README*
 /mock_modules
 npm-debug.log
+sonar.properties
 *.db
 .idea
 .DS_Store

@@ -24,6 +24,10 @@ describe("mockify.setMockifyDir & mockify.addMockifyDir\n",function(){
         it("should find thirdmodule in default mock_modules2",function(){
             thirdTest.filename.should.be.eql(thirdMock.filename);
         });
+
+        after(function(){
+            mockify.disable();
+        });
     });
 
     describe("should find second module and third module in mock_modules2\n",function(){
@@ -49,6 +53,10 @@ describe("mockify.setMockifyDir & mockify.addMockifyDir\n",function(){
 
         it("should find third module in default mock_modules2",function(){
             thirdTest.filename.should.be.eql(thirdMock.filename);
+        });
+
+        after(function(){
+            mockify.disable();
         });
     });
 });

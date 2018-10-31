@@ -1,6 +1,6 @@
 {
   "name": "muon-mockify",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "The way you mock your project",
   "main": "main.js",
   "scripts": {

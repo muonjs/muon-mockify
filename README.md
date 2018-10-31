@@ -165,7 +165,7 @@ console.log(http === httpMock); // TRUE
 - **mockfiy.removeMock( [ id ] )**
 
 Вызов данного метода отменяет действие вызова `mockify.enableMock` для имен и/или путей переданных в качестве аргумента, а также добавляет соответствующие имена в игнорируемый список в процессе поиска mock-модулей в файловой системе в директориях
-**MOCKIFY_DIR**. Также метод очищает require кэш для указанных модулей, таким образом повторный экспорт указанных модулей приведет к их повторной загрузке и исполнению. Данный метод может быть полезен, когда требуется исключить из полного списка существующих mock-объектов, подключаемых через `mockify.enable`,  один или несколько модулей. 
+**MOCKIFY_DIR**. Также метод очищает require кэш для указанных модулей, таким образом повторный экспорт указанных модулей приведет к их повторной загрузке и исполнению. Данный метод может быть полезен, когда требуется исключить из полного списка существующих mock-объектов, подключаемых через `mockify.enable`,  один или несколько модулей.
 
 **Пример:**<br>
 ```js
@@ -193,7 +193,7 @@ console.log(mymodule_orig === mymodule); // TRUE
 &nbsp;
 - **mockfiy.getMockifyDirs() : [ path ]**
 
-Возвращает список текущих путей поиска **MOCKIFY_DIR** mock-объектов. 
+Возвращает список текущих путей поиска **MOCKIFY_DIR** mock-объектов.
 
 &nbsp;
 - **mockfiy.setMockifyDir( path | [path] )**
@@ -306,14 +306,14 @@ describe("test case for HTTP Mock",function(){
     var httpMockRet = "<strong>Success</strong>",
         httpMockStatus = 200,
         HttpMock = require("./http-mock");
-        
+
     var retData, retStatus, retErr;
-    
+
     before(function() {
         /// Активируем враппер require и замещаем модуль 'http' mock-объектом
         mockify.enableMock("http",new HttpMock(httpMockStatus,httpMockRet));
     });
-    
+
     // Выполняем метод
     before(function(done){
         mockify.original("./lib/myhttpclient").get("http://foo.bar",function(err,status,data){
@@ -323,28 +323,28 @@ describe("test case for HTTP Mock",function(){
             done();
         });
     });
-    
+
     // Выполняем серию проверок
     it("err should be null",function(){
         expect(retErr).to.be.a("null");
     });  
-  
+
     it("data should exist",function(){
         expect(retData).to.be.a("string");
     });
-    
+
     it("status should exist",function(){
         expect(retStatus).to.be.a("number");
     });
-    
+
     it("data should be success",function(){
         retData.shoud.be.equal(httpMockRet);
     });
-    
+
     it("status should be ok",function(){
         retStatus.shoud.be.equal(httpMockStatus);
     });
-    
+
     // Отключаем враппер, чтобы не влиять на другие тесты
     after(mockify.disable);
 });
@@ -369,7 +369,7 @@ exports.jsonify = function(source,callback) {
         }
     });
 }
-    
+
 exports.xmlify = function(source,callback) {
     ...
 }
@@ -380,7 +380,7 @@ exports.xmlify = function(source,callback) {
 ```js
 # ./mock_modules/lib/myhttpclient.js
 
-var mockErr,mockStatus,mockData; 
+var mockErr,mockStatus,mockData;
 exports.setup = function(err,status,data){
     mockStatus = status;
     mockData = data;
@@ -406,13 +406,13 @@ describe("test case for data processor",function(){
         initialData = "{ \"status\": \"Success\" }",
         initialObject = JSON.parse(initialData),
         testError,testObject;
-        
+
     // Подключаем MOCKIFY_DIR и настраиваем mock-объект
     before(function(){
         mockify.enable();
         require("../lib/myhttpclient.js").setup(null,initialStatus,initialData);
     });
-    
+
     // Запускаем сценарий
     before(function(done) {
         mockify.original("../lib/dataproc.js").jsonify(dummySource,function(err,data){
@@ -421,16 +421,16 @@ describe("test case for data processor",function(){
             done();
         });
     });
-    
+
     // Проверяем результат
     it("err should be a null",function(){
         expect(testError).to.be.a("null");
     });
-    
+
     it("ret data should match to initial object",function(){
         testObject.should.be.equal(initialObject);
     });
-    
+
     // Отключаем враппер
     after(mockify.disable);
 });
@@ -448,32 +448,32 @@ describe("unit test suite",function(){
     before(function(){
         mockify.enable();
     });
-    
+
     describe("test case for ./mymodule1",function(){
         before(function() {
             mockify.original("../lib/mymodule1").run( ... );
         });
-        
+
         it ("check it" ,function() { ... });
     });
-    
+
     describe("test case for ./mymodule2",function(){
         before(function() {
             mockify.original("../lib/mymodule2").run( ... );
         });
-        
+
         it ("check it" ,function() { ... });
     });
-    
+
     ...
-    
+
     after(mockify.disable);
 });
 ```
 
 Помимо этого вы также можете создавать отдельные сьюиты с независимыми тестовыми сценариями.
 В сложном проекте это может быть удобно для тестирования отдельных значимых аспектов поведения программного продукта.
-Добиться этого можно, используя наборы mock-модулей с согласованным поведением и (или) набором тестовых данных, 
+Добиться этого можно, используя наборы mock-модулей с согласованным поведением и (или) набором тестовых данных,
 помещенных в отдельные переключаемые директории **MOCKIFY_DIR**.
 
 ____
@@ -481,4 +481,3 @@ ____
 #### Лицензия
 
 Исходный код данного проекта распространяется под лицензией MIT.
-

@@ -13,13 +13,8 @@
     "postsystemtest": "chmod 777 reports/*.xml || true",
     "systemsimple": "rm -rf systemtest/node_modules && cd systemtest && npm install &&  (mocha -g '' --reporter dot || true)  && cd ..",
     "preexampletest": "(mkdir reports || true) && (rm -rf example/node_modules/* || true)",
-<<<<<<< HEAD
-    "exampletest": "cd example && npm install && (mocha -C --reporter xunit 1> ../reports/xunit-example.xml || true) && cd ..",
-    "examplesimple": "cd example && npm install && (mocha --reporter min || true) && cd ..",
-=======
     "exampletest": "cd example && npm install && (mocha -C --reporter xunit 1> ../reports/xunit-example.xml || true) && sync && cd ..",
     "examplesimple": "cd example && npm install && (mocha --reporter min || true) && cd .." ,
->>>>>>> master
     "postexampletest": "chmod 777 reports/*.xml || true"
   },
   "repository": {
